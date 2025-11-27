@@ -1,0 +1,107 @@
+[
+  {
+    "id": 1764249682655,
+    "label": "Test Timer - Exercise Session",
+    "startTime": 1764249682655,
+    "endTime": 1764249687713,
+    "elapsedTime": {
+      "formatted": "00:00:05",
+      "totalSeconds": 5,
+      "hours": 0,
+      "minutes": 0,
+      "seconds": 5
+    },
+    "status": "stopped",
+    "createdAt": "2025-11-27T13:21:22.655Z"
+  },
+  {
+    "id": 1764249687735,
+    "label": "Multi-Timer Test 1",
+    "startTime": 1764249687735,
+    "endTime": 1764249689784,
+    "elapsedTime": {
+      "formatted": "00:00:02",
+      "totalSeconds": 2,
+      "hours": 0,
+      "minutes": 0,
+      "seconds": 2
+    },
+    "status": "stopped",
+    "createdAt": "2025-11-27T13:21:27.735Z"
+  },
+  {
+    "id": 1764249687743,
+    "label": "Multi-Timer Test 2",
+    "startTime": 1764249687743,
+    "endTime": 1764249689795,
+    "elapsedTime": {
+      "formatted": "00:00:02",
+      "totalSeconds": 2,
+      "hours": 0,
+      "minutes": 0,
+      "seconds": 2
+    },
+    "status": "stopped",
+    "createdAt": "2025-11-27T13:21:27.743Z"
+  },
+  {
+    "id": 1764249687753,
+    "label": "Multi-Timer Test 3",
+    "startTime": 1764249687753,
+    "endTime": 1764249689804,
+    "elapsedTime": {
+      "formatted": "00:00:02",
+      "totalSeconds": 2,
+      "hours": 0,
+      "minutes": 0,
+      "seconds": 2
+    },
+    "status": "stopped",
+    "createdAt": "2025-11-27T13:21:27.753Z"
+  },
+  {
+    "id": 1764250524771,
+    "label": "Meditation",
+    "startTime": 1764250524771,
+    "endTime": 1764250532267,
+    "elapsedTime": {
+      "formatted": "00:00:07",
+      "totalSeconds": 7,
+      "hours": 0,
+      "minutes": 0,
+      "seconds": 7
+    },
+    "status": "stopped",
+    "createdAt": "2025-11-27T13:35:24.771Z"
+  },
+  {
+    "id": 1764254150675,
+    "label": "Meditation",
+    "startTime": 1764254150675,
+    "endTime": 1764254153339,
+    "elapsedTime": {
+      "formatted": "00:00:02",
+      "totalSeconds": 2,
+      "hours": 0,
+      "minutes": 0,
+      "seconds": 2
+    },
+    "status": "stopped",
+    "createdAt": "2025-11-27T14:35:50.675Z"
+  },
+  {
+    "id": 1764257189701,
+    "label": "Drink water.",
+    "startTime": 1764257189701,
+    "endTime": 1764257195473,
+    "elapsedTime": {
+      "formatted": "00:00:05",
+      "totalSeconds": 5,
+      "hours": 0,
+      "minutes": 0,
+      "seconds": 5
+    },
+    "status": "stopped",
+    "createdAt": "2025-11-27T15:26:29.701Z"
+  }
+]

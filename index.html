@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Timer Microservice - Home</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #E6F3FF;
+      color: #111;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    }
+    h1 { margin-top: 30px; }
+    main { 
+      max-width: 700px; 
+      margin: 40px auto; 
+      background: white; 
+      padding: 30px; 
+      border-radius: 10px; 
+      box-shadow: 0 0 8px rgba(0,0,0,0.1); 
+    }
+    p { 
+      font-size: 1.1rem; 
+      line-height: 1.6; 
+      color: #333; 
+      text-align: left;
+    }
+    .feature-list {
+      text-align: left;
+      margin: 20px 0;
+    }
+    .feature-list li {
+      margin: 10px 0;
+    }
+    nav {
+      background-color: #0078d7;
+      padding: 10px;
+      text-align: center;
+    }
+    nav a {
+      color: white;
+      margin: 0 15px;
+      text-decoration: none;
+      font-weight: bold;
+      padding: 8px 15px;
+      border-radius: 5px;
+      transition: background-color 0.3s;
+    }
+    nav a:hover {
+      background-color: #005a9e;
+    }
+    .code-example {
+      background-color: #f5f5f5;
+      padding: 15px;
+      border-radius: 5px;
+      text-align: left;
+      margin: 20px 0;
+      overflow-x: auto;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="start-timer.html">Start Timer</a>
+    <a href="view-timers.html">View Timers</a>
+  </nav>
+
+  <main>
+    <h1>⏱️ Timer / Stopwatch Microservice</h1>
+    <p>
+      Welcome to the Timer Microservice! This service allows you to start, stop, and track timers
+      programmatically or through the web interface.
+    </p>
+    
+    <h2>Features</h2>
+    <ul class="feature-list">
+      <li>✅ Start timers with optional labels</li>
+      <li>✅ Stop timers and get elapsed time in multiple formats</li>
+      <li>✅ View all running and stopped timers</li>
+      <li>✅ Reset timers to start over</li>
+      <li>✅ Delete timers when no longer needed</li>
+      <li>✅ RESTful API for programmatic access</li>
+    </ul>
+
+    <h2>Quick Start</h2>
+    <p>Use the navigation bar above to:</p>
+    <ul class="feature-list">
+      <li><strong>Start Timer:</strong> Create new timers with custom labels</li>
+      <li><strong>View Timers:</strong> See all timers and their elapsed times</li>
+    </ul>
+
+    <h2>API Example</h2>
+    <div class="code-example">
+      <strong>Start a timer:</strong><br>
+      <code>POST http://localhost:3001/timers/start</code><br>
+      <code>{ "label": "My Task" }</code><br><br>
+      
+      <strong>Stop a timer:</strong><br>
+      <code>POST http://localhost:3001/timers/{id}/stop</code><br><br>
+      
+      <strong>Get timer status:</strong><br>
+      <code>GET http://localhost:3001/timers/{id}</code>
+    </div>
+
+    <p style="margin-top: 30px; color: #666; font-size: 0.9rem;">
+      Running on <strong>http://localhost:3001</strong>
+    </p>
+  </main>
+</body>
+</html>

@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>View Timers - Timer Microservice</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #E6F3FF;
+      color: #111;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    }
+    h1 { margin-top: 30px; }
+    main { 
+      max-width: 900px; 
+      margin: 40px auto; 
+      background: white; 
+      padding: 30px; 
+      border-radius: 10px; 
+      box-shadow: 0 0 8px rgba(0,0,0,0.1); 
+    }
+    nav {
+      background-color: #0078d7;
+      padding: 10px;
+      text-align: center;
+    }
+    nav a {
+      color: white;
+      margin: 0 15px;
+      text-decoration: none;
+      font-weight: bold;
+      padding: 8px 15px;
+      border-radius: 5px;
+      transition: background-color 0.3s;
+    }
+    nav a:hover {
+      background-color: #005a9e;
+    }
+    .button-group {
+      margin: 20px 0;
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+    }
+    button {
+      padding: 10px 25px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background-color 0.3s;
+    }
+    .refresh-btn {
+      background-color: #0078d7;
+      color: white;
+    }
+    .refresh-btn:hover {
+      background-color: #005a9e;
+    }
+    .timer-card {
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      padding: 20px;
+      margin: 15px 0;
+      text-align: left;
+      transition: box-shadow 0.3s;
+    }
+    .timer-card:hover {
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    .timer-card.running {
+      border-color: #28a745;
+      background-color: #f0fff4;
+    }
+    .timer-card.stopped {
+      border-color: #dc3545;
+      background-color: #fff5f5;
+    }
+    .timer-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    .timer-label {
+      font-size: 1.3rem;
+      font-weight: bold;
+      color: #333;
+    }
+    .timer-status {
+      padding: 5px 15px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      font-weight: bold;
+    }
+    .status-running {
+      background-color: #28a745;
+      color: white;
+    }
+    .status-stopped {
+      background-color: #dc3545;
+      color: white;
+    }
+    .timer-details {
+      color: #666;
+      margin: 8px 0;
+      font-size: 0.95rem;
+    }
+    .elapsed-time {
+      font-size: 2rem;
+      font-weight: bold;
+      color: #0078d7;
+      margin: 15px 0;
+      font-family: 'Courier New', monospace;
+    }
+    .timer-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+    }
+    .action-btn {
+      padding: 8px 20px;
+      font-size: 0.9rem;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .stop-btn {
+      background-color: #dc3545;
+      color: white;
+    }
+    .stop-btn:hover {
+      background-color: #c82333;
+    }
+    .reset-btn {
+      background-color: #ffc107;
+      color: #333;
+    }
+    .reset-btn:hover {
+      background-color: #e0a800;
+    }
+    .delete-btn {
+      background-color: #6c757d;
+      color: white;
+    }
+    .delete-btn:hover {
+      background-color: #5a6268;
+    }
+    .no-timers {
+      text-align: center;
+      color: #999;
+      padding: 40px;
+      font-size: 1.1rem;
+    }
+    #message {
+      margin-top: 20px;
+      padding: 15px;
+      border-radius: 5px;
+      display: none;
+    }
+    .success {
+      background-color: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+    .error {
+      background-color: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="start-timer.html">Start Timer</a>
+    <a href="view-timers.html">View Timers</a>
+  </nav>
+
+  <main>
+    <h1>📊 All Timers</h1>
+    <p style="text-align: left; color: #666;">
+      View all your timers and their current elapsed times. Running timers update automatically every second.
+    </p>
+
+    <div class="button-group">
+      <button class="refresh-btn" onclick="loadTimers()">🔄 Refresh</button>
+    </div>
+
+    <div id="message"></div>
+    <div id="timers-container"></div>
+  </main>
+
+  <script>
+    let autoRefreshInterval;
+
+    async function loadTimers() {
+      const container = document.getElementById('timers-container');
+      
+      try {
+        const response = await fetch('http://localhost:3001/timers');
+        const data = await response.json();
+        
+        if (data.success && data.timers.length > 0) {
+          container.innerHTML = data.timers.map(timer => createTimerCard(timer)).join('');
+        } else {
+          container.innerHTML = '<div class="no-timers">No timers found. Start a new timer to get started!</div>';
+        }
+      } catch (error) {
+        container.innerHTML = `<div class="no-timers" style="color: #dc3545;">Error loading timers: ${error.message}</div>`;
+      }
+    }
+    
+    function createTimerCard(timer) {
+      const statusClass = timer.status === 'running' ? 'running' : 'stopped';
+      const statusBadgeClass = timer.status === 'running' ? 'status-running' : 'status-stopped';
+      
+      return `
+        <div class="timer-card ${statusClass}">
+          <div class="timer-header">
+            <div class="timer-label">${timer.label}</div>
+            <div class="timer-status ${statusBadgeClass}">${timer.status.toUpperCase()}</div>
+          </div>
+          
+          <div class="elapsed-time">${timer.elapsedTime.formatted}</div>
+          
+          <div class="timer-details">
+            <strong>Timer ID:</strong> ${timer.id}<br>
+            <strong>Started:</strong> ${new Date(timer.startTime).toLocaleString()}<br>
+            ${timer.endTime ? `<strong>Stopped:</strong> ${new Date(timer.endTime).toLocaleString()}<br>` : ''}
+            <strong>Total Seconds:</strong> ${timer.elapsedTime.totalSeconds}
+          </div>
+          
+          <div class="timer-actions">
+            ${timer.status === 'running' ? 
+              `<button class="action-btn stop-btn" onclick="stopTimer(${timer.id})">⏹️ Stop</button>` : 
+              `<button class="action-btn reset-btn" onclick="resetTimer(${timer.id})">🔄 Reset & Restart</button>`
+            }
+            <button class="action-btn delete-btn" onclick="deleteTimer(${timer.id})">🗑️ Delete</button>
+          </div>
+        </div>
+      `;
+    }
+    
+    async function stopTimer(id) {
+      const messageDiv = document.getElementById('message');
+      
+      try {
+        const response = await fetch(`http://localhost:3001/timers/${id}/stop`, {
+          method: 'POST'
+        });
+        const data = await response.json();
+        
+        if (data.success) {
+          messageDiv.className = 'success';
+          messageDiv.innerHTML = `✅ Timer stopped! Elapsed time: ${data.timer.elapsedTime.formatted}`;
+          messageDiv.style.display = 'block';
+          loadTimers();
+        } else {
+          throw new Error(data.error || 'Failed to stop timer');
+        }
+      } catch (error) {
+        messageDiv.className = 'error';
+        messageDiv.innerHTML = `❌ Error: ${error.message}`;
+        messageDiv.style.display = 'block';
+      }
+    }
+    
+    async function resetTimer(id) {
+      if (!confirm('This will restart the timer from zero. Continue?')) return;
+      
+      const messageDiv = document.getElementById('message');
+      
+      try {
+        const response = await fetch(`http://localhost:3001/timers/${id}/reset`, {
+          method: 'POST'
+        });
+        const data = await response.json();
+        
+        if (data.success) {
+          messageDiv.className = 'success';
+          messageDiv.innerHTML = `✅ Timer reset and restarted!`;
+          messageDiv.style.display = 'block';
+          loadTimers();
+        } else {
+          throw new Error(data.error || 'Failed to reset timer');
+        }
+      } catch (error) {
+        messageDiv.className = 'error';
+        messageDiv.innerHTML = `❌ Error: ${error.message}`;
+        messageDiv.style.display = 'block';
+      }
+    }
+    
+    async function deleteTimer(id) {
+      if (!confirm('Are you sure you want to delete this timer? This cannot be undone.')) return;
+      
+      const messageDiv = document.getElementById('message');
+      
+      try {
+        const response = await fetch(`http://localhost:3001/timers/${id}`, {
+          method: 'DELETE'
+        });
+        const data = await response.json();
+        
+        if (data.success) {
+          messageDiv.className = 'success';
+          messageDiv.innerHTML = `✅ Timer deleted successfully!`;
+          messageDiv.style.display = 'block';
+          loadTimers();
+        } else {
+          throw new Error(data.error || 'Failed to delete timer');
+        }
+      } catch (error) {
+        messageDiv.className = 'error';
+        messageDiv.innerHTML = `❌ Error: ${error.message}`;
+        messageDiv.style.display = 'block';
+      }
+    }
+    
+    // Auto-refresh every second for running timers
+    function startAutoRefresh() {
+      autoRefreshInterval = setInterval(loadTimers, 1000);
+    }
+    
+    // Initial load
+    loadTimers();
+    startAutoRefresh();
+    
+    // Clean up on page unload
+    window.addEventListener('beforeunload', () => {
+      if (autoRefreshInterval) {
+        clearInterval(autoRefreshInterval);
+      }
+    });
+  </script>
+</body>
+</html>

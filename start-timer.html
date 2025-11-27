@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Start Timer - Timer Microservice</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #E6F3FF;
+      color: #111;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    }
+    h1 { margin-top: 30px; }
+    main { 
+      max-width: 600px; 
+      margin: 40px auto; 
+      background: white; 
+      padding: 30px; 
+      border-radius: 10px; 
+      box-shadow: 0 0 8px rgba(0,0,0,0.1); 
+    }
+    nav {
+      background-color: #0078d7;
+      padding: 10px;
+      text-align: center;
+    }
+    nav a {
+      color: white;
+      margin: 0 15px;
+      text-decoration: none;
+      font-weight: bold;
+      padding: 8px 15px;
+      border-radius: 5px;
+      transition: background-color 0.3s;
+    }
+    nav a:hover {
+      background-color: #005a9e;
+    }
+    .form-group {
+      margin: 20px 0;
+      text-align: left;
+    }
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+      color: #333;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-sizing: border-box;
+      font-size: 1rem;
+    }
+    .button-group {
+      margin: 30px 0;
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+    }
+    button {
+      padding: 12px 30px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background-color 0.3s;
+    }
+    .start-btn {
+      background-color: #28a745;
+      color: white;
+    }
+    .start-btn:hover {
+      background-color: #218838;
+    }
+    .clear-btn {
+      background-color: #6c757d;
+      color: white;
+    }
+    .clear-btn:hover {
+      background-color: #5a6268;
+    }
+    #result {
+      margin-top: 20px;
+      padding: 15px;
+      border-radius: 5px;
+      display: none;
+    }
+    .success {
+      background-color: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+    .error {
+      background-color: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+    .info-text {
+      color: #666;
+      font-size: 0.9rem;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="start-timer.html">Start Timer</a>
+    <a href="view-timers.html">View Timers</a>
+  </nav>
+
+  <main>
+    <h1>⏱️ Start a New Timer</h1>
+    <p style="text-align: left; color: #666;">
+      Create a new timer to track how long a task or activity takes. 
+      You can optionally give it a label to identify it later.
+    </p>
+
+    <div class="form-group">
+      <label for="label">Timer Label (optional):</label>
+      <input 
+        type="text" 
+        id="label" 
+        placeholder="e.g., Exercise Session, Study Time, Work Task"
+        maxlength="100"
+      />
+      <p class="info-text">Leave blank for "Unnamed Timer"</p>
+    </div>
+
+    <div class="button-group">
+      <button class="start-btn" onclick="startTimer()">▶️ Start Timer</button>
+      <button class="clear-btn" onclick="clearForm()">Clear</button>
+    </div>
+
+    <div id="result"></div>
+  </main>
+
+  <script>
+    async function startTimer() {
+      const label = document.getElementById('label').value.trim();
+      const resultDiv = document.getElementById('result');
+      
+      try {
+        const response = await fetch('http://localhost:3001/timers/start', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ label: label || undefined })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+          resultDiv.className = 'success';
+          resultDiv.innerHTML = `
+            <strong>✅ Timer Started!</strong><br>
+            Timer ID: ${data.timer.id}<br>
+            Label: ${data.timer.label}<br>
+            Started at: ${new Date(data.timer.startTime).toLocaleString()}<br><br>
+            <em>Go to "View Timers" to see it running!</em>
+          `;
+          resultDiv.style.display = 'block';
+          
+          // Clear the form
+          document.getElementById('label').value = '';
+        } else {
+          throw new Error(data.error || 'Failed to start timer');
+        }
+      } catch (error) {
+        resultDiv.className = 'error';
+        resultDiv.innerHTML = `<strong>❌ Error:</strong> ${error.message}`;
+        resultDiv.style.display = 'block';
+      }
+    }
+    
+    function clearForm() {
+      document.getElementById('label').value = '';
+      document.getElementById('result').style.display = 'none';
+    }
+  </script>
+</body>
+</html>

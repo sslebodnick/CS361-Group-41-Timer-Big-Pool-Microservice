@@ -1,0 +1,17 @@
+{
+  "name": "cs361-group-41-timer-big-pool-microservice",
+  "version": "1.0.0",
+  "description": "A flexible timer/stopwatch microservice for tracking elapsed time",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": ["timer", "stopwatch", "microservice"],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^5.1.0"
+  }
+}
